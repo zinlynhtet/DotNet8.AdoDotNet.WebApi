@@ -11,4 +11,8 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DotNet8.AdoDotNet.Shared\DotNet8.AdoDotNet.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
