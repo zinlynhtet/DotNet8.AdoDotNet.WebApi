@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 
 namespace DotNet8.AdoDotNet.Shared;
 
-public abstract class AdoDotNetService
+public  class AdoDotNetService
 {
     private readonly string _connectionString;
 
-    protected AdoDotNetService(string connectionString) => _connectionString = connectionString;
+    public AdoDotNetService(string connectionString) => _connectionString = connectionString;
 
     public List<T> Query<T>(string query, params AdoDotNetParameter[]? parameters)
     {
