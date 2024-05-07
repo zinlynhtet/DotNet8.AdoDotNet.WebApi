@@ -1,6 +1,4 @@
-﻿
-
-namespace DotNetTrainingBatch4.RestApi.Models;
+﻿namespace DotNetTrainingBatch4.RestApi.Models;
 
 [Table("Tbl_Blogs")]
 public class BlogDataModel
