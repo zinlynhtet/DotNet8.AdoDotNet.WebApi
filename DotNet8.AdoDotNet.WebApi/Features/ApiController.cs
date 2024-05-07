@@ -1,5 +1,4 @@
-﻿using DotNet8.AdoDotNet.Shared;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace DotNet8.AdoDotNet.WebApi.Features;
 
@@ -7,42 +6,87 @@ namespace DotNet8.AdoDotNet.WebApi.Features;
 [ApiController]
 public class ApiController : ControllerBase
 {
-    private readonly AdoDotNetService _adoDotNetService =
-        new AdoDotNetService(SqlConnectionString.sqlConnectionStringBuilder.ConnectionString);
+    private readonly IApplication _application;
 
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        return Ok();
+        var list = await _application.GetBlogs();
+        return Ok(list);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        return Ok();
+        try
+        {
+            var item = await _application.GetBlogById(id);
+            if (item is null) return NotFound("No Data Found.");
+            return Ok(item);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post()
+    public async Task<IActionResult> Post(BlogDataModel reqModel)
     {
-        return Ok();
+        try
+        {
+            var item = await _application.CreateBlog(reqModel);
+            var message = item > 0 ? "Saving Successful" : "Saving Failed.";
+            return Ok(message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put()
+    public async Task<IActionResult> Put(int id, BlogDataModel reqModel)
     {
-        return Ok();
+        try
+        {
+            var item = await _application.PutBlog(id, reqModel);
+            var message = item > 0 ? "Saving Successful" : "Saving Failed.";
+            return Ok(message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> Patch()
+    public async Task<IActionResult> Patch(int id, BlogDataModel reqModel)
     {
-        return Ok();
+        try
+        {
+            var item = await _application.PatchBlog(id, reqModel);
+            var message = item > 0 ? "Saving Successful" : "Saving Failed.";
+            return Ok(message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete()
+    public async Task<IActionResult> Delete(int id)
     {
-        return Ok();
+        try
+        {
+            var item = await _application.DeleteBlog(id);
+            var message = item > 0 ? "Deleting Successful" : "Deleting Failed.";
+            return Ok(message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
     }
 }
