@@ -58,33 +58,8 @@ public class Application : IApplication
         }
 
         var parameters = new List<AdoDotNetParameter>();
-        var conditions = string.Empty;
-        if (!string.IsNullOrEmpty(reqModel.BlogTitle))
-        {
-            conditions += " [BlogTitle] = @BlogTitle, ";
-            parameters.Add(new AdoDotNetParameter("@BlogTitle", reqModel.BlogTitle));
-        }
-
-        if (!string.IsNullOrEmpty(reqModel.BlogAuthor))
-        {
-            conditions += " [BlogAuthor] = @BlogAuthor, ";
-            parameters.Add(new AdoDotNetParameter("@BlogAuthor", reqModel.BlogAuthor));
-        }
-
-        if (!string.IsNullOrEmpty(reqModel.BlogContent))
-        {
-            conditions += " [BlogContent] = @BlogContent, ";
-            parameters.Add(new AdoDotNetParameter("@BlogContent", reqModel.BlogContent));
-        }
-
-        if (conditions.Length == 0)
-        {
-            throw new Exception("Invalid conditions");
-        }
-
-        parameters.Add(new AdoDotNetParameter("@BlogId", id));
-        conditions = conditions.Substring(0, conditions.Length - 2);
-        string query = $@"UPDATE [dbo].[Tbl_Blog] SET {conditions} WHERE BlogId = @BlogId";
+        var conditions = Queries.Conditions(id, reqModel, parameters);
+        var query = Queries.PatchQuery(conditions);
         var result = await _adoDotNetService.Execute(query,
             parameters.ToArray()
         );
