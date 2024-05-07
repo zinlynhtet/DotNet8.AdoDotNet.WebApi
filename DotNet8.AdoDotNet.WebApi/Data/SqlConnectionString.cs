@@ -1,6 +1,4 @@
-﻿using System.Data.SqlClient;
-
-namespace DotNet8.AdoDotNet.WebApi;
+﻿namespace DotNet8.AdoDotNet.WebApi;
 
 internal static class SqlConnectionString
 {
