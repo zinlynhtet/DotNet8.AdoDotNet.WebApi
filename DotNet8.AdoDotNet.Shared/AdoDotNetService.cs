@@ -4,16 +4,16 @@ using Newtonsoft.Json;
 
 namespace DotNet8.AdoDotNet.Shared;
 
-public  class AdoDotNetService
+public class AdoDotNetService
 {
     private readonly string _connectionString;
 
     public AdoDotNetService(string connectionString) => _connectionString = connectionString;
 
-    public List<T> Query<T>(string query, params AdoDotNetParameter[]? parameters)
+    public async Task<List<T>> Query<T>(string query, params AdoDotNetParameter[]? parameters)
     {
         SqlConnection connection = new SqlConnection(_connectionString);
-        connection.Open();
+        await connection.OpenAsync();
         SqlCommand command = new SqlCommand(query, connection);
         if (parameters is not null && parameters.Length > 0)
         {
@@ -23,17 +23,17 @@ public  class AdoDotNetService
 
         SqlDataAdapter adapter = new SqlDataAdapter(command);
         DataTable dt = new DataTable();
-        adapter.Fill(dt);
-        connection.Close();
+        await Task.Run(() => adapter.Fill(dt));
+        await connection.CloseAsync();
         string json = JsonConvert.SerializeObject(dt);
         var lst = JsonConvert.DeserializeObject<List<T>>(json);
         return lst;
     }
 
-    public T QueryFirstOrDefault<T>(string query, params AdoDotNetParameter[]? parameters)
+    public async Task<T> QueryFirstOrDefault<T>(string query, params AdoDotNetParameter[]? parameters)
     {
         SqlConnection connection = new SqlConnection(_connectionString);
-        connection.Open();
+        await connection.OpenAsync();
         SqlCommand command = new SqlCommand(query, connection);
         if (parameters is not null && parameters.Length > 0)
         {
@@ -43,16 +43,18 @@ public  class AdoDotNetService
 
         SqlDataAdapter adapter = new SqlDataAdapter(command);
         DataTable dt = new DataTable();
-        adapter.Fill(dt);
-        connection.Close();
+        await Task.Run(() => adapter.Fill(dt));
+        await connection.CloseAsync();
+
         string json = JsonConvert.SerializeObject(dt);
         var lst = JsonConvert.DeserializeObject<List<T>>(json);
         return lst[0];
     }
-    public int Execute(string query, params AdoDotNetParameter[]? parameters)
+
+    public async Task<int> Execute(string query, params AdoDotNetParameter[]? parameters)
     {
         SqlConnection connection = new SqlConnection(_connectionString);
-        connection.Open();
+        await connection.OpenAsync();
 
         SqlCommand cmd = new SqlCommand(query, connection);
         if (parameters is not null && parameters.Length > 0)
@@ -62,23 +64,9 @@ public  class AdoDotNetService
 
         var result = cmd.ExecuteNonQuery();
 
-        connection.Close();
+        await connection.CloseAsync();
         return result;
     }
 
-    public abstract class AdoDotNetParameter
-    {
-        private AdoDotNetParameter()
-        {
-        }
-
-        private AdoDotNetParameter(string name, object value)
-        {
-            Name = name;
-            Value = value;
-        }
-
-        public string Name { get; set; }
-        public object Value { get; set; }
-    }
+   
 }
