@@ -67,6 +67,4 @@ public class AdoDotNetService
         await connection.CloseAsync();
         return result;
     }
-
-   
 }
