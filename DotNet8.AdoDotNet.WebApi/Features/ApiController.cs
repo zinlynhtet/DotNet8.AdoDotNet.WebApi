@@ -28,19 +28,19 @@ public class ApiController : ControllerBase
         return Ok();
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<IActionResult> Put()
     {
         return Ok();
     }
 
-    [HttpPatch]
+    [HttpPatch("{id}")]
     public async Task<IActionResult> Patch()
     {
         return Ok();
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete()
     {
         return Ok();
