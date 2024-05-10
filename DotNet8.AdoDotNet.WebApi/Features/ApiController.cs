@@ -8,6 +8,8 @@ public class ApiController : ControllerBase
 {
     private readonly IApplication _application;
 
+    public ApiController(IApplication application) => _application = application;
+
     [HttpGet]
     public async Task<IActionResult> Get()
     {
